@@ -1,15 +1,17 @@
 const ItemType = require('Types').ItemType;
+const BoxMng = require('boxMng');
 
 //商品
 const Item = cc.Class({
     extends: cc.Component,
 
     properties: {
-
         itemType: {
             default: ItemType.Item1,
             type: ItemType
         },
+
+        boxMng:BoxMng,
 
         //对应价格label
         priceLabel:{
@@ -34,10 +36,23 @@ const Item = cc.Class({
     },
 
     init(itemMng){
-       // console.log("init item"+this.itemType)
+        //console.log("init item"+this.itemType)
         this.itemMng=itemMng
         this.__price=0
     },
+
+
+    onEnable: function () {
+        //console.log("xx" +this.name)
+        this.node.on('touchend', this.itemMng.onClickItem, this)
+    },
+    
+    onDisable: function () {
+        this.node.off('touchend', this.itemMng.onClickItem, this)
+    },
+
+
+
 
     //外部调用统一更新
     updateSelf(){

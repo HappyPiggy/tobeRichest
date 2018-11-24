@@ -6,6 +6,8 @@ cc.Class({
 
     properties: {
         itemMng: cc.Node,
+        boxMng: cc.Node,
+        player: cc.Node,
 
     },
 
@@ -14,6 +16,11 @@ cc.Class({
        this.itemMng = this.itemMng.getComponent('ItemMng');
        this.itemMng.init(this);
 
+       this.boxMng = this.boxMng.getComponent('boxMng');
+       this.boxMng.init(this);
+
+       this.player = this.player.getComponent('player');
+       this.player.init(this);
 
        this.registerButton()
    },
@@ -23,11 +30,11 @@ cc.Class({
    },
 
     onEnable: function () {
-    this.nextBtn.on(cc.Node.EventType.MOUSE_UP, this.onNextBtn, this)
+    this.nextBtn.on('touchend', this.onNextBtn, this)
     },
 
     onDisable: function () {
-        this.nextBtn.off(cc.Node.EventType.MOUSE_UP, this.onNextBtn, this)
+        this.nextBtn.off('touchend', this.onNextBtn, this)
     },
 
 

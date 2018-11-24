@@ -6006,7 +6006,7 @@ declare module cc {
 	  -cc.Node.EventType.MOUSE_MOVE  // 鼠标按住移动后事件<br/>
 	  -cc.Node.EventType.MOUSE_ENTER // 鼠标进入目标事件<br/>
 	  -cc.Node.EventType.MOUSE_LEAVE // 鼠标离开目标事件<br/>
-	  -cc.Node.EventType.MOUSE_UP    // 鼠标松开事件<br/>
+	  -'touchend'    // 鼠标松开事件<br/>
 	  -cc.Node.EventType.MOUSE_WHEEL // 鼠标滚轮事件<br/> */
 	export class Button extends Component {		
 		/** !#en

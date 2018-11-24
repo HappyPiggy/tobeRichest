@@ -10,7 +10,17 @@ cc.Class({
             type:cc.Node
         },
 
+        depotObjsRoot:{
+            default:null,
+            type:cc.Node
+        },
+
         inactiveObjsRoot:{
+            default:null,
+            type:cc.Node
+        },
+
+        inactiveDepotRoot:{
             default:null,
             type:cc.Node
         },
@@ -19,11 +29,18 @@ cc.Class({
             default: [],
             type: [cc.Prefab]
         },
+
+        depotItemsOrign:{
+            default: [],
+            type: [cc.Prefab]
+        },
     },
 
     init (game) {
        // console.log("itemMng Init")
+
         this.game = game
+
         this.marketItemCount=5 //出售商品列数
         this.curItemList=new Array()
         this.objNameList=new Array()
@@ -45,6 +62,15 @@ cc.Class({
             item.init(this)
         }
         this.updateItems()
+
+
+    //初始化仓库物品到隐藏列表
+        for (let i = 0; i < this.depotItemsOrign.length; ++i) {
+            var node = cc.instantiate(this.depotItemsOrign[i])
+            node.parent = this.inactiveDepotRoot
+            var item=node.getComponent('Item')
+            item.init(this)
+        }
     },
 
 
@@ -81,6 +107,15 @@ cc.Class({
         //     this.curItemList[i].updateSelf()
         // }
     },
+
+    //点击了商品
+    //item调用 所以this是对应的item
+    onClickItem(){
+      // var curSpriteFrame=this.getComponent(cc.Sprite).spriteFrame
+      // console.log("res " + curSpriteFrame.name)
+       this.itemMng.game.boxMng.showBuyBox(this)
+    },
+
 
 
     //生成随机不重复的数组 不包含max

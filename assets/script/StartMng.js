@@ -14,11 +14,11 @@ cc.Class({
     },
 
     onEnable: function () {
-        this.startBtn.on(cc.Node.EventType.MOUSE_UP, this.onStartGameBtn, this)
+        this.startBtn.on('touchend', this.onStartGameBtn, this)
     },
 
     onDisable: function () {
-        this.startBtn.off(cc.Node.EventType.MOUSE_UP, this.onStartGameBtn, this)
+        this.startBtn.off('touchend', this.onStartGameBtn, this)
     },
 
 
