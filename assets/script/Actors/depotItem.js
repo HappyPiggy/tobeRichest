@@ -8,11 +8,14 @@ const DepotItem =cc.Class({
     properties: {
 
         
-        //对应价格label
+        //对应数量label
         countLabel:{
             default: null,
             type : cc.Label
         },
+
+
+        startMoney:0, //最开始买入的价格
 
 
         count:{
@@ -28,6 +31,13 @@ const DepotItem =cc.Class({
         },
     },
 
+    // onEnable: function () {
+
+    // },
+    
+    // onDisable: function () {
+    // },
+
 
 
     init(itemMng){
@@ -35,7 +45,7 @@ const DepotItem =cc.Class({
         this.__count=0
     },
 
-    updateSelf(){
+    updateUI(){
         this._super()
         this.countLabel.string=this.count
     },

@@ -51,6 +51,7 @@ const boxMng=cc.Class({
          this.game = game
          this.buyCnt=0
          this.sellCnt=0
+         this.max=0 //最大可买/卖的数
          this.initButton()
      },
 
@@ -79,7 +80,6 @@ const boxMng=cc.Class({
         this.box.active=true
         this.buyBtnObj.active=true
         this.sellBtnObj.active=false
-        this.max=0 //最大可买/卖的数
 
        // console.log("res" +this.cutItemSprite.spriteFrame.name)
         this.cutItemSprite.spriteFrame=item.getComponent(cc.Sprite).spriteFrame
@@ -93,7 +93,7 @@ const boxMng=cc.Class({
         this.sellBtnObj.active=true
         this.cutItemSprite.spriteFrame=item.getComponent(cc.Sprite).spriteFrame
 
-        this.tipsLabel.string="sell"
+        this.CalcMaxSellCount()
      },
 
      hideBox(){
@@ -109,15 +109,52 @@ const boxMng=cc.Class({
         if(money<0 || this.buyCnt>this.game.player.depotLast)
         {
             //作弊
-        }else{
-            this.game.player.money=money
-            this.game.player.depotItems=this.game.player.depotItems+this.buyCnt
+        }else if(this.buyCnt>0){
+            var res=this.game.itemMng.onClickBuy(this.curItem,this.buyCnt)
         }
 
-        this.hideBox()
+        if(res){
+            this.game.player.setData(money,this.buyCnt)
+            this.hideBox()
+        }else{
+            if(this.game.player.depotLast<=0){
+                this.cntEditor.string="0"
+                this.tipsLabel.string="仓库已满"
+            }else{
+                this.cntEditor.string="0"
+                this.tipsLabel.string="仓库最多容纳5个种类商品"
+            }
+
+        }
 
      },
 
+
+     onSellButton(){
+
+         if(this.game.itemMng.checkIsInSale(this.curItem)){
+             this.sellCnt=parseInt(this.cntEditor.string)
+             var sellItem=this.game.itemMng.GetInSaleItem(this.curItem)
+             var money=this.game.player.money+this.sellCnt*sellItem.price
+
+             if(this.sellCnt>this.game.player.depotCap)
+                {
+                    //作弊
+                }else if(this.sellCnt>0){
+                    var res=this.game.itemMng.onClickSell(this.curItem,this.sellCnt)
+                }
+
+                if(res){
+                    this.game.player.setData(money,-this.sellCnt)
+                    this.hideBox()
+                }
+
+         }else{
+            this.cntEditor.string="0"
+            this.tipsLabel.string="当前市场中不流通该商品"
+         }
+
+    },
 
      //检测输入是否合法
      checkIsValid(){
@@ -141,9 +178,13 @@ const boxMng=cc.Class({
         this.cntEditor.string=this.max.toString()
      },
 
-     onSellButton(){
-
+     CalcMaxSellCount(){
+        this.max=this.curItem.count
+        this.tipsLabel.string="最多可卖出"+this.max+"个"
+        this.cntEditor.string=this.max.toString()
      },
+
+
 });
 
 module.exports = boxMng;

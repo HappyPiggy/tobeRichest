@@ -39,7 +39,7 @@ cc.Class({
 
 
     onNextBtn(){
-        this.itemMng.updateItems()
+        this.itemMng.nextDayUpdate()
     }
 
 

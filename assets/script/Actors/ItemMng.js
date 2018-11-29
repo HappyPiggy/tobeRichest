@@ -1,4 +1,4 @@
-const Item = require('Item');
+
 
 cc.Class({
     extends: cc.Component,
@@ -42,7 +42,8 @@ cc.Class({
         this.game = game
 
         this.marketItemCount=5 //出售商品列数
-        this.curItemList=new Array()
+        this.curDepotItemList=new Array() //当前仓库中有的商品
+        this.curItemList=new Array() //当前商店出售中中有的商品
         this.objNameList=new Array()
 
         this.initItems()
@@ -54,6 +55,9 @@ cc.Class({
     initItems(){
         //console.log("res " + res)
         this.objNameList.length=0
+        this.curItemList.length=0
+        this.curDepotItemList.length=0
+
         for (let i = 0; i < this.itemsOrign.length; ++i) {
             var node = cc.instantiate(this.itemsOrign[i])
             node.parent = this.inactiveObjsRoot
@@ -61,7 +65,7 @@ cc.Class({
             var item=node.getComponent('Item')
             item.init(this)
         }
-        this.updateItems()
+        this.nextDayUpdate()
 
 
     //初始化仓库物品到隐藏列表
@@ -75,9 +79,9 @@ cc.Class({
 
 
 
-    updateItems(){
+    //更新商品
+    nextDayUpdate(){
 
-        this.curItemList.length=0
         //回收到不可视列表
         if(this.objsRoot.childrenCount>0){
             var children=this.objsRoot.children
@@ -89,6 +93,7 @@ cc.Class({
         }
 
 
+        this.curItemList.length=0
         //放入可视列表
         var res=this.createRandom(this.marketItemCount,0,this.itemsOrign.length)
 
@@ -98,24 +103,121 @@ cc.Class({
             node.parent = this.objsRoot
             var item=node.getComponent('Item')
             item.price= this.createRandom2(item.minPrice,item.maxPrice) //todo 根据xx修改价格
-            item.updateSelf()
-            //this.curItemList.push(item)
+            item.updateUI()
+            this.curItemList.push(item)
         } 
 
-
-        // for(let i=0;i<this.curItemList.length;++i){
-        //     this.curItemList[i].updateSelf()
-        // }
     },
 
     //点击了商品
     //item调用 所以this是对应的item
     onClickItem(){
-      // var curSpriteFrame=this.getComponent(cc.Sprite).spriteFrame
       // console.log("res " + curSpriteFrame.name)
-       this.itemMng.game.boxMng.showBuyBox(this)
+        if(this.name.indexOf("depot")!=-1){
+            this.itemMng.game.boxMng.showSellBox(this)
+        }else{
+            this.itemMng.game.boxMng.showBuyBox(this)
+        }
     },
 
+
+
+    //boxmanager中买入
+    //item为商品 cnt为数量
+    onClickBuy(item,cnt){
+
+        //console.log("xxx "+item.itemType)
+       // console.log("xxx "+this.curItemList.length)
+       if(this.curDepotItemList.length>=5)
+       {
+        var isNew=true
+        for(let i=0;i<this.curDepotItemList.length;++i){
+            var depotItem=this.curDepotItemList[i]
+            if(depotItem.itemType==item.itemType)
+                isNew=false
+        }
+
+        if(isNew)     
+            return false
+       }
+
+       //已经在仓库中
+       for(let i=0;i<this.curDepotItemList.length;++i){
+        var depotItem=this.curDepotItemList[i]
+
+        if(depotItem.itemType==item.itemType){
+            var newPrice=(depotItem.price*depotItem.count+item.price*cnt)/(depotItem.count+cnt)
+            depotItem.price=Math.floor(newPrice)
+            depotItem.count=depotItem.count+cnt
+            depotItem.updateUI()
+            return true
+           }
+       }
+        
+
+
+        for(let i=0;i<this.inactiveDepotRoot.childrenCount;++i){
+            var obj=this.inactiveDepotRoot.children[i].getComponent("Item")
+            if(obj.itemType==item.itemType){
+                obj.startMoney=item.price
+                obj.price=item.price
+                obj.count=cnt
+                obj.node.parent=this.depotObjsRoot
+                obj.updateUI()
+                this.curDepotItemList.push(obj)
+                return true
+            }
+
+        }
+    },
+
+    onClickSell(item,cnt){
+        var idx=-1
+        for(let i=0;i<this.curDepotItemList.length;++i){
+            var depotItem=this.curDepotItemList[i]
+            if(depotItem.itemType==item.itemType){
+                idx=i
+                break
+            }
+        }
+        
+
+        if(idx!=-1){
+            var depotItem=this.curDepotItemList[idx]
+            depotItem.count=depotItem.count-cnt
+            depotItem.updateUI()
+
+            if(depotItem.count<=0){
+                depotItem.node.parent=this.inactiveDepotRoot
+                this.curDepotItemList.splice(idx,1)
+            }
+            return true
+        }
+        return false
+
+        //this.curDepotItemList.length=this.curDepotItemList.length-1
+    },
+
+
+    //查看当前仓库中的物品是否在市场中有销售
+    checkIsInSale(item){
+        for(let i=0;i<this.curItemList.length;++i){
+            if(this.curItemList[i].itemType==item.itemType){
+                return true
+            }
+        }
+        return false;
+    },
+
+    GetInSaleItem(item){
+        if(this.checkIsInSale(item)){
+            for(let i=0;i<this.curItemList.length;++i){
+                if(this.curItemList[i].itemType==item.itemType)
+                return this.curItemList[i]
+            }
+        }
+        return null
+    },
 
 
     //生成随机不重复的数组 不包含max

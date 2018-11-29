@@ -43,7 +43,7 @@ const Item = cc.Class({
 
 
     onEnable: function () {
-        //console.log("xx" +this.name)
+       // console.log("xx" +this.name)
         this.node.on('touchend', this.itemMng.onClickItem, this)
     },
     
@@ -55,7 +55,7 @@ const Item = cc.Class({
 
 
     //外部调用统一更新
-    updateSelf(){
+    updateUI(){
       //  console.log("update "+this.itemType)
        // console.log("cur content "+this.priceLabel.string)
         this.priceLabel.string=this.__price

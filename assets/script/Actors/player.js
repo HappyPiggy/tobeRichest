@@ -68,16 +68,22 @@ cc.Class({
    init(game){
       // console.log("init player")
        this.game=game
-       this.__money=1000 //todo 服务器获取
+       this.__money=10000 //todo 服务器获取
        this.__depotCap=100
        this.__depotItems=0
        this.itemMng=game.itemMng
 
-       this.update()
+       this.updateUI()
     
    },
 
-   update(){
+   setData(money,cnt){
+        this.money=money
+        this.depotItems=this.game.player.depotItems+cnt
+        this.updateUI()
+   },
+
+   updateUI(){
        this.moneyLabel.string="现金："+this.money
        this.depotLabel.string="仓库("+this.depotItems+"/"+this.depotCap+")"
 
