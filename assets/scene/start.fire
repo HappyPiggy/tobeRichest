@@ -218,14 +218,14 @@
     "_id": "38rE/JO2pON6hSvijhUJU9"
   },
   {
-    "__type__": "a760ae5OiNIP7o0Mlca54Dn",
+    "__type__": "8f6ccfNYjJMsqw5PnIPGK+h",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 3
     },
     "_enabled": true,
-    "_id": "e30/LXCUxDELhBm5NIiiRT"
+    "_id": "01WRjMLq5J/LHas6WxgM9w"
   },
   {
     "__type__": "cc.Node",
@@ -657,7 +657,7 @@
     "target": {
       "__id__": 3
     },
-    "component": "StartManager",
+    "component": "StartMng",
     "handler": "onShareBtn",
     "customEventData": ""
   },

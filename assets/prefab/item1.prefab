@@ -21,7 +21,7 @@
       }
     ],
     "_active": true,
-    "_level": 7,
+    "_level": 3,
     "_components": [
       {
         "__id__": 5
@@ -272,11 +272,12 @@
     },
     "_enabled": true,
     "itemType": 0,
+    "boxMng": null,
     "priceLabel": {
       "__id__": 3
     },
-    "minPrice": 300,
-    "maxPrice": 1500,
+    "minPrice": 1000,
+    "maxPrice": 4000,
     "_id": ""
   },
   {

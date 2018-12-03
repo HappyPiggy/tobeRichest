@@ -25,6 +25,12 @@ const Item = cc.Class({
             },
 
             set: function (value) {
+                if(this.name.indexOf("depot")==-1){
+                    value=Math.floor(value)
+                    if(value<this.minPrice) value=this.minPrice
+                    if(value>this.maxPrice) value=this.maxPrice
+                }
+
                 this.__price = value;
             },
             
@@ -56,7 +62,7 @@ const Item = cc.Class({
 
     //外部调用统一更新
     updateUI(){
-      //  console.log("update "+this.itemType)
+       // console.log("update "+this.__price)
        // console.log("cur content "+this.priceLabel.string)
         this.priceLabel.string=this.__price
     },

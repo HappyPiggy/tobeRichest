@@ -108,15 +108,22 @@ const boxMng=cc.Class({
         
         if(money<0 || this.buyCnt>this.game.player.depotLast)
         {
-            //作弊
+           //console.log("xx")
+            
         }else if(this.buyCnt>0){
             var res=this.game.itemMng.onClickBuy(this.curItem,this.buyCnt)
+        }else{
+            return 
         }
+
 
         if(res){
             this.game.player.setData(money,this.buyCnt)
             this.hideBox()
         }else{
+          //  var xx=this.game.player.money-this.buyCnt*this.curItem.price
+          // console.log("xx "+xx)
+
             if(this.game.player.depotLast<=0){
                 this.cntEditor.string="0"
                 this.tipsLabel.string="仓库已满"

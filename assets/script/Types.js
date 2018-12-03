@@ -5,6 +5,8 @@ const ItemType = cc.Enum({
     Item4:-1,
     Item5:-1,
     Item6:-1,
+    Item7:-1,
+    Item8:-1,
 });
 
 module.exports = {

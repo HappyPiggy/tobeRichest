@@ -34,6 +34,7 @@ cc.Class({
             default: [],
             type: [cc.Prefab]
         },
+
     },
 
     init (game) {
@@ -102,7 +103,7 @@ cc.Class({
         var node=this.inactiveObjsRoot.getChildByName(this.objNameList[res[i]]);
             node.parent = this.objsRoot
             var item=node.getComponent('Item')
-            item.price= this.createRandom2(item.minPrice,item.maxPrice) //todo 根据xx修改价格
+            item.price= this.randomPrice(item.minPrice,item.maxPrice)
             item.updateUI()
             this.curItemList.push(item)
         } 
@@ -219,6 +220,29 @@ cc.Class({
         return null
     },
 
+
+    //随机抽取在售商品
+    getInSaleItemRandom(){
+        var idx=this.createRandom2(0,this.curItemList.length-1)
+        return this.curItemList[idx]
+    },
+
+
+    //正常的价格浮动 在平均值上下0.1浮动
+    randomPrice(min,max){
+        var price=Math.floor((min+max)/2)
+        var sign=this.createRandom2(0,1)
+        var range=this.createRandom2(50,100)/1000
+        var delta=price*range
+        if(sign==0){
+            price+=delta
+
+        }else{
+            price-=delta
+        }
+        return price
+
+    },
 
     //生成随机不重复的数组 不包含max
     createRandom(num ,min ,max){
